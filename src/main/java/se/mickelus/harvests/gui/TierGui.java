@@ -20,6 +20,7 @@ import se.mickelus.harvests.HarvestsMod;
 import se.mickelus.mutil.gui.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TierGui extends GuiElement {
@@ -40,13 +41,17 @@ public class TierGui extends GuiElement {
                 .setAttachment(GuiAttachment.topCenter));
         int tierWidth = font.width(tierLabel) * 2;
 
-        ItemStack[] repairItems = tier.getRepairIngredient().getItems();
-        if (repairItems.length > 0) {
-            addChild(new GuiItem(0, 26)
-                    .setItem(repairItems[0])
-                    .setResetDepthTest(false)
-                    .setAttachment(GuiAttachment.topCenter));
-        }
+        // some mods seem to return null as getRepairIngredient even though it's annotated as NoNNull
+        Optional.ofNullable(tier.getRepairIngredient())
+                .map(Ingredient::getItems)
+                .filter(items -> items.length > 0)
+                .map(items -> items[0])
+                .map(itemStack -> new GuiItem(0, 26)
+                        .setItem(itemStack)
+                        .setResetDepthTest(false)
+                        .setAttachment(GuiAttachment.topCenter))
+                .ifPresent(this::addChild);
+
 
         ResourceLocation tierIdentifier = TierSortingRegistry.getName(tier);
         String tierName = font.plainSubstrByWidth(StringUtils.capitalize(tierIdentifier.getPath().replace("_", " ")), 60);
@@ -94,7 +99,9 @@ public class TierGui extends GuiElement {
             addChild(new OverflowCounterGui(43, 74, overflowToolNames));
         }
 
-        List<Block> applicableBlocks = tier.getTag().getValues();
+        List<Block> applicableBlocks = Optional.ofNullable(tier.getTag())
+                .map(Tag::getValues)
+                .orElseGet(Collections::emptyList);
         boolean blockOverflow = applicableBlocks.size() > 6;
         int blockCount = Math.min(blockOverflow ? 5 : 6, applicableBlocks.size());
 
