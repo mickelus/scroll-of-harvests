@@ -18,10 +18,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import se.mickelus.harvests.HarvestsMod;
-import se.mickelus.mutil.gui.ClipRectGui;
-import se.mickelus.mutil.gui.GuiAttachment;
-import se.mickelus.mutil.gui.GuiElement;
-import se.mickelus.mutil.gui.GuiTexture;
+import se.mickelus.mutil.gui.*;
 import se.mickelus.mutil.gui.impl.GuiHorizontalLayoutGroup;
 import se.mickelus.mutil.gui.impl.GuiHorizontalScrollable;
 
@@ -91,7 +88,7 @@ public class ScrollScreen extends Screen {
                 .map(tier -> new TierGui(0, 0, tier, tieredItems))
                 .forEach(horizontalLayout::addChild);
 
-        defaultGui.addChild(new ScrollBarGui(0, -24, 160, scrollable, true).setAttachment(GuiAttachment.bottomCenter));
+        defaultGui.addChild(new ScrollBarGui(0, -25, 180, 3, scrollable, true).setAttachment(GuiAttachment.bottomCenter));
 
         defaultGui.addChild(new GuiTexture(11, 52, 5, 49, 128, 160, scrollTexture));
         defaultGui.addChild(new GuiTexture(11, 102, 5, 93, 137, 160, scrollTexture));
