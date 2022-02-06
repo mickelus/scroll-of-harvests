@@ -9,16 +9,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.TierSortingRegistry;
 import org.apache.commons.lang3.StringUtils;
 import se.mickelus.harvests.HarvestsMod;
 import se.mickelus.mutil.gui.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,7 +89,8 @@ public class TierGui extends GuiElement {
         for (int i = 0; i < toolCount; i++) {
             addChild(new GuiItem((i % 3) * 19 + 5, 54 + (i / 3) * 19)
                     .setItem(applicableTools.get(i).getDefaultInstance())
-                    .setResetDepthTest(false));
+                    .setResetDepthTest(false)
+                    .setRenderDecoration(false));
         }
 
         if (toolOverflow) {
@@ -108,7 +112,8 @@ public class TierGui extends GuiElement {
         for (int i = 0; i < blockCount; i++) {
             addChild(new GuiItem((i % 3) * 19 + 5, 102 + (i / 3) * 19)
                     .setItem(applicableBlocks.get(i).asItem().getDefaultInstance())
-                    .setResetDepthTest(false));
+                    .setResetDepthTest(false)
+                    .setRenderDecoration(false));
         }
 
         if (blockOverflow) {
