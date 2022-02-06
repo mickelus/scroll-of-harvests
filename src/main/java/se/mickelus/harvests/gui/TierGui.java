@@ -56,11 +56,21 @@ public class TierGui extends GuiElement {
         addChild(nameElement);
 
         nameTooltip = ImmutableList.of(new TextComponent(tierIdentifier.toString()),
-                new TranslatableComponent("harvests.level", tierNumber).withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("harvests.durability", tier.getUses()).withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("harvests.efficiency", tier.getSpeed()).withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("harvests.damage", tier.getAttackDamageBonus()).withStyle(ChatFormatting.GRAY),
-                new TranslatableComponent("harvests.enchantability", tier.getEnchantmentValue()).withStyle(ChatFormatting.GRAY));
+                new TranslatableComponent("harvests.level",
+                        ChatFormatting.GRAY.toString() + tierNumber + ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.DARK_GRAY),
+                new TranslatableComponent("harvests.durability",
+                        ChatFormatting.GRAY.toString() + tier.getUses() + ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.DARK_GRAY),
+                new TranslatableComponent("harvests.efficiency",
+                        ChatFormatting.GRAY.toString() + tier.getSpeed() + ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.DARK_GRAY),
+                new TranslatableComponent("harvests.damage",
+                        ChatFormatting.GRAY.toString() + tier.getAttackDamageBonus() + ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.DARK_GRAY),
+                new TranslatableComponent("harvests.enchantability",
+                        ChatFormatting.GRAY.toString() + tier.getEnchantmentValue() + ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.DARK_GRAY));
 
         List<TieredItem> applicableTools = tieredItems.stream()
                 .filter(item -> tier.equals(item.getTier()))
