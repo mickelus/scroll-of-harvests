@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.TierSortingRegistry;
@@ -18,10 +19,14 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import se.mickelus.harvests.HarvestsMod;
+import se.mickelus.harvests.api.TierFilter;
+import se.mickelus.harvests.filter.TierFilterStore;
 import se.mickelus.mutil.gui.*;
+import se.mickelus.mutil.gui.impl.GuiColors;
 import se.mickelus.mutil.gui.impl.GuiHorizontalLayoutGroup;
 import se.mickelus.mutil.gui.impl.GuiHorizontalScrollable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -30,8 +35,12 @@ import java.util.stream.Collectors;
 public class ScrollScreen extends Screen {
     private static final ResourceLocation scrollButtonTexture = new ResourceLocation(HarvestsMod.modId, "textures/gui/scroll_button.png");
     private static final ResourceLocation scrollTexture = new ResourceLocation(HarvestsMod.modId, "textures/gui/scroll.png");
-
+    private static TierFilter filter;
+    private static double scrollOffset;
     private GuiElement defaultGui;
+    private GuiElement filterTabs;
+    private GuiHorizontalLayoutGroup tierGroup;
+    private GuiHorizontalScrollable scrollArea;
 
     protected ScrollScreen() {
         super(new TextComponent("harvests:gui_title"));
@@ -65,10 +74,22 @@ public class ScrollScreen extends Screen {
 
         defaultGui.clearChildren();
 
-        List<TieredItem> tieredItems = ForgeRegistries.ITEMS.getValues().stream()
-                .filter(item -> item instanceof TieredItem)
-                .map(item -> (TieredItem) item)
-                .collect(Collectors.toList());
+        filterTabs = new GuiHorizontalLayoutGroup(15, 32, 13, 0);
+        defaultGui.addChild(filterTabs);
+
+        TierFilter[] filters = TierFilterStore.instance.getFilters();
+        if (filters.length > 1) {
+            for (int i = 0; i < filters.length; i++) {
+                filterTabs.addChild(new GuiRect(0, 2, 1, 2, GuiColors.normal).setOpacity(0.3f).setAttachment(GuiAttachment.middleLeft));
+                filterTabs.addChild(new FilterTabGui(0, 0, filters[i], this::selectFilter));
+            }
+            filterTabs.addChild(new GuiRect(0, 2, 1, 2, GuiColors.normal).setOpacity(0.3f).setAttachment(GuiAttachment.middleLeft));
+        }
+
+        if ((filter == null || !Arrays.asList(filters).contains(filter))) {
+            filter = filters[0];
+            scrollOffset = 0;
+        }
 
         defaultGui.addChild(new GuiTexture(0, 46, 46, 154, 0, 0, scrollTexture));
         defaultGui.addChild(new GuiTexture(46, 46, 164, 154, 46, 0, scrollTexture));
@@ -78,17 +99,13 @@ public class ScrollScreen extends Screen {
         ClipRectGui clipRect = new ClipRectGui(17, 52, 394, 142);
         defaultGui.addChild(clipRect);
 
-        GuiHorizontalScrollable scrollable = new GuiHorizontalScrollable(0, 0, 394, 142);
-        clipRect.addChild(scrollable);
+        scrollArea = new GuiHorizontalScrollable(0, 0, 394, 142);
+        clipRect.addChild(scrollArea);
 
-        GuiHorizontalLayoutGroup horizontalLayout = new GuiHorizontalLayoutGroup(0, 0, 142, 2);
-        scrollable.addChild(horizontalLayout);
+        tierGroup = new GuiHorizontalLayoutGroup(0, 0, 142, 2);
+        scrollArea.addChild(tierGroup);
 
-        TierSortingRegistry.getSortedTiers().stream()
-                .map(tier -> new TierGui(0, 0, tier, tieredItems))
-                .forEach(horizontalLayout::addChild);
-
-        defaultGui.addChild(new ScrollBarGui(0, -25, 180, 3, scrollable, true).setAttachment(GuiAttachment.bottomCenter));
+        defaultGui.addChild(new ScrollBarGui(0, -25, 180, 3, scrollArea, true).setAttachment(GuiAttachment.bottomCenter));
 
         defaultGui.addChild(new GuiTexture(11, 52, 5, 49, 128, 160, scrollTexture));
         defaultGui.addChild(new GuiTexture(11, 102, 5, 93, 137, 160, scrollTexture));
@@ -102,6 +119,47 @@ public class ScrollScreen extends Screen {
 
         defaultGui.addChild(new GuiTexture(-2, 48, 19, 12, 235, 154, scrollTexture).setAttachment(GuiAttachment.topRight));
         defaultGui.addChild(new GuiTexture(-2, 188, 19, 10, 235, 166, scrollTexture).setAttachment(GuiAttachment.topRight));
+
+        updateFilter(filter);
+        tierGroup.forceLayout();
+        scrollArea.forceRefreshBounds();
+        scrollArea.setOffset(scrollOffset);
+    }
+
+    private void setupTiers() {
+        List<TieredItem> tieredItems = ForgeRegistries.ITEMS.getValues().stream()
+                .filter(item -> item instanceof TieredItem)
+                .map(item -> (TieredItem) item)
+                .collect(Collectors.toList());
+
+        tierGroup.clearChildren();
+        Tier[] tiers = TierSortingRegistry.getSortedTiers().stream()
+                .filter(tier -> filter.predicate.test(tier))
+                .toArray(Tier[]::new);
+
+        for (int i = 0; i < tiers.length; i++) {
+            int index = filter.collapseLevels ? i : TierSortingRegistry.getTiersLowerThan(tiers[i]).size();
+            tierGroup.addChild(new TierGui(0, 0, tiers[i], index, tieredItems));
+        }
+        scrollArea.markDirty();
+    }
+
+    private void updateFilter(TierFilter filter) {
+        filterTabs.getChildren(FilterTabGui.class).forEach(tab -> tab.updateSelectedFilter(filter));
+        ScrollScreen.filter = filter;
+        setupTiers();
+    }
+
+    private void selectFilter(TierFilter filter) {
+        updateFilter(filter);
+        scrollOffset = 0;
+        scrollArea.setOffset(0);
+    }
+
+    @Override
+    public void onClose() {
+        scrollOffset = scrollArea.getOffset();
+        super.onClose();
     }
 
     @Override

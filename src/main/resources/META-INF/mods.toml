@@ -14,7 +14,7 @@ credits=""
 [[dependencies.harvests]] #optional
     modId="forge"
     mandatory=true
-    versionRange="[38,)"
+    versionRange="[39,)"
     ordering="NONE"
     side="CLIENT"
 [[dependencies.harvests]]
@@ -26,12 +26,6 @@ credits=""
 [[dependencies.harvests]]
     modId="mutil"
     mandatory=true
-    versionRange="[4.3.0,]"
+    versionRange="[4.4.0,]"
     ordering="NONE"
-    side="CLIENT"
-[[dependencies.harvests]]
-    modId="tetra"
-    mandatory=false
-    versionRange="[4.0.0,]"
-    ordering="AFTER"
     side="CLIENT"

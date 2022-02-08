@@ -14,6 +14,8 @@
     "harvests.damage": "Damage: %s",
     "harvests.enchantability": "Enchantability: %s",
     "harvests.scroll_button.tooltip": "Scroll of Harvests",
+    "harvests.filter.default": "Default",
+    "harvests.filter.default.tooltip": "The default set of tiers",
     "harvests.tier.1": "I",
     "harvests.tier.2": "II",
     "harvests.tier.3": "III",

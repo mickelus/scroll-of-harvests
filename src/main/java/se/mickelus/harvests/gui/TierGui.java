@@ -31,12 +31,12 @@ public class TierGui extends GuiElement {
     private final GuiString nameElement;
     private final List<Component> nameTooltip;
 
-    public TierGui(int x, int y, Tier tier, List<TieredItem> tieredItems) {
+    public TierGui(int x, int y, Tier tier, int index, List<TieredItem> tieredItems) {
         super(x, y, 64, 142);
 
         Font font = Minecraft.getInstance().font;
 
-        int tierNumber = TierSortingRegistry.getTiersLowerThan(tier).size() + 1;
+        int tierNumber = index + 1;
         String tierLabel = I18n.get("harvests.tier." + tierNumber);
         addChild(new LargeStringGui(1, 4, tierLabel, 0)
                 .setShadow(false)

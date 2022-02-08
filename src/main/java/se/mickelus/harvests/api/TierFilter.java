@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class TierFilter {
-
     private static List<TierFilter> filters = new ArrayList<>();
 
-    String labelKey;
-    boolean useRegistryLevels = true;
-    Predicate<Tier> filter;
+    public String key;
+    public boolean collapseLevels;
+    public Predicate<Tier> predicate;
 
-    public TierFilter(String labelKey, boolean useRegistryLevels, Predicate<Tier> filter) {
-        this.labelKey = labelKey;
-        this.useRegistryLevels = useRegistryLevels;
-        this.filter = filter;
+    public TierFilter(String labelKey, boolean collapseLevels, Predicate<Tier> filter) {
+        this.key = labelKey;
+        this.collapseLevels = collapseLevels;
+        this.predicate = filter;
     }
 
     public static void register(TierFilter filter) {
