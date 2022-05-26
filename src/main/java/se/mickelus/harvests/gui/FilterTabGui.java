@@ -40,7 +40,7 @@ public class FilterTabGui extends GuiClickable {
     }
 
     private void updateState(boolean hasFocus) {
-        setOpacity(isSelected ? 1 : hasFocus ? 0.8f : 0.5f);
+        setOpacity(isSelected ? 1 : hasFocus ? 0.8f : 0.4f);
 
         label.setColor(hasFocus ? GuiColors.hover : GuiColors.normal);
     }

@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -17,11 +16,12 @@ import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.TierSortingRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
 import org.apache.commons.lang3.StringUtils;
 import se.mickelus.harvests.HarvestsMod;
 import se.mickelus.mutil.gui.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -104,8 +104,11 @@ public class TierGui extends GuiElement {
         }
 
         List<Block> applicableBlocks = Optional.ofNullable(tier.getTag())
-                .map(Tag::getValues)
-                .orElseGet(Collections::emptyList);
+                .filter(ForgeRegistries.BLOCKS.tags()::isKnownTagName)
+                .map(ForgeRegistries.BLOCKS.tags()::getTag)
+                .stream()
+                .flatMap(ITag::stream)
+                .collect(Collectors.toList());
         boolean blockOverflow = applicableBlocks.size() > 6;
         int blockCount = Math.min(blockOverflow ? 5 : 6, applicableBlocks.size());
 

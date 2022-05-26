@@ -148,7 +148,9 @@ public class TierFilterStore implements ResourceManagerReloadListener {
                 return false;
             }
 
-            if (requireBlocks && (tier.getTag() == null || tier.getTag().getValues().isEmpty())) {
+            if (requireBlocks && (tier.getTag() == null
+                    || !ForgeRegistries.BLOCKS.tags().isKnownTagName(tier.getTag())
+                    || ForgeRegistries.BLOCKS.tags().getTag(tier.getTag()).isEmpty())) {
                 return false;
             }
 
