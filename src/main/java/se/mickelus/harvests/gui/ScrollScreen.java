@@ -8,8 +8,6 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -43,7 +41,7 @@ public class ScrollScreen extends Screen {
     private GuiHorizontalScrollable scrollArea;
 
     protected ScrollScreen() {
-        super(new TextComponent("harvests:gui_title"));
+        super(Component.literal("harvests:gui_title"));
 
         defaultGui = new GuiElement(0, 0, 420, 240);
     }
@@ -51,7 +49,7 @@ public class ScrollScreen extends Screen {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onScreenInit(ScreenEvent.InitScreenEvent.Post event) {
         if (event.getScreen() instanceof InventoryScreen screen) {
-            Component tooltip = new TranslatableComponent("harvests.scroll_button.tooltip");
+            Component tooltip = Component.translatable("harvests.scroll_button.tooltip");
             event.addListener(new ImageButton(screen.getGuiLeft() + 125, screen.height / 2 - 22, 18, 18, 0,
                     0, 19, scrollButtonTexture, 256, 256,
                     button -> Minecraft.getInstance().setScreen(new ScrollScreen()),

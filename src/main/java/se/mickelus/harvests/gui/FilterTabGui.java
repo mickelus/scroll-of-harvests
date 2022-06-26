@@ -3,7 +3,6 @@ package se.mickelus.harvests.gui;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import se.mickelus.harvests.api.TierFilter;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiClickable;
@@ -30,7 +29,7 @@ public class FilterTabGui extends GuiClickable {
 
         setWidth(label.getWidth() + 10);
 
-        tooltip = ImmutableList.of(new TranslatableComponent("harvests.filter." + filter.key + ".tooltip"));
+        tooltip = ImmutableList.of(Component.translatable("harvests.filter." + filter.key + ".tooltip"));
     }
 
     public void updateSelectedFilter(TierFilter filter) {

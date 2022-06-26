@@ -14,18 +14,18 @@ credits=""
 [[dependencies.harvests]] #optional
     modId="forge"
     mandatory=true
-    versionRange="[40.1,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="CLIENT"
 [[dependencies.harvests]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,]"
+    versionRange="[1.19,]"
     ordering="NONE"
     side="CLIENT"
 [[dependencies.harvests]]
     modId="mutil"
     mandatory=true
-    versionRange="[4.5.0,]"
+    versionRange="[5.0.0,]"
     ordering="NONE"
     side="CLIENT"

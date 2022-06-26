@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiString;
@@ -26,7 +25,7 @@ public class RowLabelGui extends GuiElement {
         label.setColor(0);
         label.setOpacity(0.5f);
 
-        tooltip = ImmutableList.of(new TranslatableComponent("harvests." + labelKey + ".tooltip"));
+        tooltip = ImmutableList.of(Component.translatable("harvests." + labelKey + ".tooltip"));
     }
 
     @Override

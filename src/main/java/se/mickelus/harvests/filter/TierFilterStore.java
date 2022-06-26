@@ -59,9 +59,9 @@ public class TierFilterStore implements ResourceManagerReloadListener {
     private void prepareFilters() {
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         filters = Stream.concat(
-                        resourceManager.listResources("filters/", path -> path.endsWith(".json")).stream()
-                                .filter(rl -> HarvestsMod.modId.equals(rl.getNamespace()))
-                                .map(rl -> parseFilter(resourceManager, rl))
+                        resourceManager.listResources("filters/", rl -> rl.getPath().endsWith(".json")).entrySet().stream()
+                                .filter(entry -> HarvestsMod.modId.equals(entry.getKey().getNamespace()))
+                                .map(entry -> parseFilter(entry.getKey(), entry.getValue()))
                                 .filter(Objects::nonNull),
                         TierFilter.getFilters().stream())
                 .toArray(TierFilter[]::new);
@@ -72,12 +72,9 @@ public class TierFilterStore implements ResourceManagerReloadListener {
     }
 
     @Nullable
-    private TierFilter parseFilter(ResourceManager resourceManager, ResourceLocation resourceLocation) {
-        try {
-            return Optional.of(resourceManager.getResource(resourceLocation))
-                    .map(Resource::getInputStream)
-                    .map(inputStream -> new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)))
-                    .map(reader -> GsonHelper.fromJson(gson, reader, JsonElement.class))
+    private TierFilter parseFilter(ResourceLocation resourceLocation, Resource resource) {
+        try (BufferedReader reader = resource.openAsReader()) {
+            return Optional.ofNullable(GsonHelper.fromJson(gson, reader, JsonElement.class))
                     .map(this::deserialize)
                     .orElse(null);
         } catch (IOException | JsonParseException e) {

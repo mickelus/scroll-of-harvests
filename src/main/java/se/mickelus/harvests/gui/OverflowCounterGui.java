@@ -1,10 +1,7 @@
 package se.mickelus.harvests.gui;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -37,8 +34,8 @@ public class OverflowCounterGui extends GuiElement {
                     .skip(Math.min(tooltipOffset, labels.size() - tooltipCap))
                     .limit(tooltipCap)
                     .collect(Collectors.toList());
-            tooltip.add(new TextComponent(""));
-            tooltip.add(new TranslatableComponent("harvests.overflow_scroll").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.translatable("harvests.overflow_scroll").withStyle(ChatFormatting.GRAY));
         } else {
             tooltip = labels;
         }

@@ -6,8 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -63,20 +61,20 @@ public class TierGui extends GuiElement {
         nameElement.setAttachment(GuiAttachment.topCenter);
         addChild(nameElement);
 
-        nameTooltip = ImmutableList.of(new TextComponent(tierIdentifier.toString()),
-                new TranslatableComponent("harvests.level",
+        nameTooltip = ImmutableList.of(Component.literal(tierIdentifier.toString()),
+                Component.translatable("harvests.level",
                         ChatFormatting.GRAY.toString() + tierNumber + ChatFormatting.RESET)
                         .withStyle(ChatFormatting.DARK_GRAY),
-                new TranslatableComponent("harvests.durability",
+                Component.translatable("harvests.durability",
                         ChatFormatting.GRAY.toString() + tier.getUses() + ChatFormatting.RESET)
                         .withStyle(ChatFormatting.DARK_GRAY),
-                new TranslatableComponent("harvests.efficiency",
+                Component.translatable("harvests.efficiency",
                         ChatFormatting.GRAY.toString() + tier.getSpeed() + ChatFormatting.RESET)
                         .withStyle(ChatFormatting.DARK_GRAY),
-                new TranslatableComponent("harvests.damage",
+                Component.translatable("harvests.damage",
                         ChatFormatting.GRAY.toString() + tier.getAttackDamageBonus() + ChatFormatting.RESET)
                         .withStyle(ChatFormatting.DARK_GRAY),
-                new TranslatableComponent("harvests.enchantability",
+                Component.translatable("harvests.enchantability",
                         ChatFormatting.GRAY.toString() + tier.getEnchantmentValue() + ChatFormatting.RESET)
                         .withStyle(ChatFormatting.DARK_GRAY));
 
