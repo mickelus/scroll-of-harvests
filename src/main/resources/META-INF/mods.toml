@@ -27,6 +27,6 @@ displayTest="IGNORE_ALL_VERSION"
 [[dependencies.harvests]]
     modId="mutil"
     mandatory=true
-    versionRange="[5.2.0,]"
+    versionRange="[5.1.0,]"
     ordering="NONE"
     side="CLIENT"

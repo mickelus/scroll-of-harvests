@@ -16,6 +16,7 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import se.mickelus.harvests.ConfigHandler;
 import se.mickelus.harvests.HarvestsMod;
 import se.mickelus.harvests.api.TierFilter;
 import se.mickelus.harvests.filter.TierFilterStore;
@@ -47,10 +48,11 @@ public class ScrollScreen extends Screen {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onScreenInit(ScreenEvent.InitScreenEvent.Post event) {
+    public static void onScreenInit(ScreenEvent.Init.Post event) {
         if (event.getScreen() instanceof InventoryScreen screen) {
             Component tooltip = Component.translatable("harvests.scroll_button.tooltip");
-            event.addListener(new ImageButton(screen.getGuiLeft() + 125, screen.height / 2 - 22, 18, 18, 0,
+            event.addListener(new ImageButton(screen.getGuiLeft() + ConfigHandler.client.buttonX.get(),
+                    screen.getGuiTop() + ConfigHandler.client.buttonY.get(), 18, 18, 0,
                     0, 19, scrollButtonTexture, 256, 256,
                     button -> Minecraft.getInstance().setScreen(new ScrollScreen()),
                     new Button.OnTooltip() {

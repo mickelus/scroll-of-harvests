@@ -14,6 +14,7 @@ public class HarvestsMod {
     public static final String modId = "harvests";
 
     public HarvestsMod() {
+        ConfigHandler.setup();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         new TierFilterStore();
