@@ -1,6 +1,7 @@
 package se.mickelus.harvests.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiString;
 import se.mickelus.mutil.gui.animation.KeyframeAnimation;
@@ -56,17 +57,18 @@ public class LargeStringGui extends GuiString {
                 this.onBlur();
             }
         }
-
     }
 
-    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    @Override
+    public void draw(final GuiGraphics graphics, final int refX, final int refY, final int screenWidth, final int screenHeight, final int mouseX,
+            final int mouseY, final float opacity) {
         this.calculateFocusState(refX, refY, mouseX, mouseY);
         this.activeAnimations.removeIf((keyframeAnimation) -> !keyframeAnimation.isActive());
         this.activeAnimations.forEach(KeyframeAnimation::preDraw);
-        matrixStack.pushPose();
-        matrixStack.translate(refX + x, refY + y, 0);
-        matrixStack.scale(2, 2, 2);
-        drawString(matrixStack, string, 0, 0, color, opacity * getOpacity(), drawShadow);
-        matrixStack.popPose();
+        graphics.pose().pushPose();
+        graphics.pose().translate(refX + x, refY + y, 0);
+        graphics.pose().scale(2, 2, 2);
+        drawString(graphics, string, 0, 0, color, opacity * getOpacity(), drawShadow);
+        graphics.pose().popPose();
     }
 }

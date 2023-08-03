@@ -1,32 +1,28 @@
 modLoader="javafml"
-loaderVersion="[42,)"
-issueTrackerURL="https://github.com/mickelus/harvests/issues/new"
-license="MIT"
-
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
 [[mods]]
-modId="harvests"
-version="${file.jarVersion}"
-displayName="Scroll of Harvests"
-authors="Mickelus"
-description=""
-credits=""
-displayTest="IGNORE_ALL_VERSION"
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''${mod_description}'''
 
-[[dependencies.harvests]] #optional
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[42,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
-    side="CLIENT"
-[[dependencies.harvests]]
+    side="BOTH"
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.1,]"
+    versionRange="${minecraft_version_range}"
     ordering="NONE"
-    side="CLIENT"
-[[dependencies.harvests]]
+    side="BOTH"
+[[dependencies.${mod_id}]]
     modId="mutil"
     mandatory=true
-    versionRange="[5.1.0,]"
+    versionRange="${mutil_version_range}"
     ordering="NONE"
-    side="CLIENT"
+    side="BOTH"

@@ -59,7 +59,7 @@ public class TierFilterStore implements ResourceManagerReloadListener {
     private void prepareFilters() {
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         filters = Stream.concat(
-                        resourceManager.listResources("filters/", rl -> rl.getPath().endsWith(".json")).entrySet().stream()
+                        resourceManager.listResources("filters", rl -> rl.getPath().endsWith(".json")).entrySet().stream()
                                 .filter(entry -> HarvestsMod.modId.equals(entry.getKey().getNamespace()))
                                 .map(entry -> parseFilter(entry.getKey(), entry.getValue()))
                                 .filter(Objects::nonNull),
@@ -74,7 +74,7 @@ public class TierFilterStore implements ResourceManagerReloadListener {
     @Nullable
     private TierFilter parseFilter(ResourceLocation resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
-            return Optional.ofNullable(GsonHelper.fromJson(gson, reader, JsonElement.class))
+            return Optional.of(GsonHelper.fromJson(gson, reader, JsonElement.class))
                     .map(this::deserialize)
                     .orElse(null);
         } catch (IOException | JsonParseException e) {

@@ -38,7 +38,7 @@ public class TierGui extends GuiElement {
         String tierLabel = I18n.get("harvests.tier." + tierNumber);
         addChild(new LargeStringGui(1, 4, tierLabel, 0)
                 .setShadow(false)
-                .setOpacity(0.15f)
+                .setOpacity(0.35f)
                 .setAttachment(GuiAttachment.topCenter));
         int tierWidth = font.width(tierLabel) * 2;
 
@@ -137,8 +137,6 @@ public class TierGui extends GuiElement {
             outlines.addChild(new GuiTexture(tierWidth / -2 - 6, 4, 6, 14, 66, 173, texture).setAttachmentAnchor(GuiAttachment.topCenter).setOpacity(0.5f));
             outlines.addChild(new GuiTexture(tierWidth / 2, 4, 6, 14, 72, 173, texture).setAttachmentAnchor(GuiAttachment.topCenter).setOpacity(0.5f));
         }
-
-        outlines.getChildren(GuiTexture.class).forEach(tex -> tex.setUseDefaultBlending(false));
     }
 
     @Override

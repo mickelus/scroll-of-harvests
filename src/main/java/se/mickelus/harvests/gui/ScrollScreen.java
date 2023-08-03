@@ -3,8 +3,10 @@ package se.mickelus.harvests.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -51,20 +53,14 @@ public class ScrollScreen extends Screen {
     public static void onScreenInit(ScreenEvent.Init.Post event) {
         if (event.getScreen() instanceof InventoryScreen screen) {
             Component tooltip = Component.translatable("harvests.scroll_button.tooltip");
-            event.addListener(new ImageButton(screen.getGuiLeft() + ConfigHandler.client.buttonX.get(),
+            ImageButton button = new ImageButton(screen.getGuiLeft() + ConfigHandler.client.buttonX.get(),
                     screen.getGuiTop() + ConfigHandler.client.buttonY.get(), 18, 18, 0,
                     0, 19, scrollButtonTexture, 256, 256,
-                    button -> Minecraft.getInstance().setScreen(new ScrollScreen()),
-                    new Button.OnTooltip() {
-                        public void onTooltip(Button button, PoseStack poseStack, int mouseX, int mouseY) {
-                            screen.renderTooltip(poseStack, tooltip, mouseX, mouseY);
-                        }
+                    _button -> Minecraft.getInstance().setScreen(new ScrollScreen()),
+                    tooltip);
+            button.setTooltip(Tooltip.create(tooltip));
 
-                        public void narrateTooltip(Consumer<Component> narrationCallback) {
-                            narrationCallback.accept(tooltip);
-                        }
-                    },
-                    tooltip));
+            event.addListener(button);
         }
     }
 
@@ -79,9 +75,9 @@ public class ScrollScreen extends Screen {
 
         TierFilter[] filters = TierFilterStore.instance.getFilters();
         if (filters.length > 1) {
-            for (int i = 0; i < filters.length; i++) {
+            for (final TierFilter tierFilter : filters) {
                 filterTabs.addChild(new GuiRect(0, 2, 1, 2, GuiColors.normal).setOpacity(0.3f).setAttachment(GuiAttachment.middleLeft));
-                filterTabs.addChild(new FilterTabGui(0, 0, filters[i], this::selectFilter));
+                filterTabs.addChild(new FilterTabGui(0, 0, tierFilter, this::selectFilter));
             }
             filterTabs.addChild(new GuiRect(0, 2, 1, 2, GuiColors.normal).setOpacity(0.3f).setAttachment(GuiAttachment.middleLeft));
         }
@@ -163,24 +159,24 @@ public class ScrollScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTick) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
 
         defaultGui.updateFocusState((width - defaultGui.getWidth()) / 2, (height - defaultGui.getHeight()) / 2, mouseX, mouseY);
-        defaultGui.draw(poseStack, (width - defaultGui.getWidth()) / 2, (height - defaultGui.getHeight()) / 2,
+        defaultGui.draw(graphics, (width - defaultGui.getWidth()) / 2, (height - defaultGui.getHeight()) / 2,
                 width, height, mouseX, mouseY, 1);
 
-        renderHoveredToolTip(poseStack, mouseX, mouseY);
+        renderHoveredToolTip(graphics, mouseX, mouseY);
     }
 
-    protected void renderHoveredToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
+    protected void renderHoveredToolTip(final GuiGraphics graphics, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        matrixStack.pushPose();
-        matrixStack.translate(0.0D, 0.0D, 200.0D);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0D, 0.0D, 200.0D);
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
-            renderTooltip(matrixStack, tooltipLines, Optional.empty(), mouseX, mouseY);
+            graphics.renderTooltip(getMinecraft().font, tooltipLines, Optional.empty(), mouseX, mouseY);
         }
     }
 

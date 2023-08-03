@@ -2,7 +2,8 @@ package se.mickelus.harvests.gui;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import se.mickelus.mutil.gui.GuiAttachment;
@@ -29,15 +30,15 @@ public class RowLabelGui extends GuiElement {
     }
 
     @Override
-    protected void drawChildren(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
-        super.drawChildren(matrixStack, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
-        matrixStack.pushPose();
-        matrixStack.translate(refX + 3, refY, 0);
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90.0F));
-        matrixStack.translate(- (height + label.getWidth()) / 2, 0, 0);
-        label.draw(matrixStack,  0, 0,
-                screenWidth, screenHeight, mouseX, mouseY, opacity);
-        matrixStack.popPose();
+    protected void drawChildren(final GuiGraphics graphics, final int refX, final int refY, final int screenWidth, final int screenHeight,
+            final int mouseX, final int mouseY, final float opacity) {
+        super.drawChildren(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
+        graphics.pose().pushPose();
+        graphics.pose().translate(refX + 3, refY, 0);
+        graphics.pose().mulPose(Axis.ZP.rotationDegrees(-90.0F));
+        graphics.pose().translate(- (height + label.getWidth()) / 2, 0, 0);
+        label.draw(graphics,  0, 0, screenWidth, screenHeight, mouseX, mouseY, opacity);
+        graphics.pose().popPose();
 
     }
 
