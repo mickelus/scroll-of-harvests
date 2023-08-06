@@ -7,11 +7,10 @@ plugins {
 }
 
 if (System.getenv('VERSION') != null) {
-    version = System.getenv('VERSION')
-} else {
-    version = mod_version
+    mod_version = System.getenv('VERSION')
 }
 
+version = "${minecraft_version}-${mod_version}"
 group = mod_group_id
 
 base {
